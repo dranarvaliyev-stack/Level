@@ -2,17 +2,13 @@
 
 A live fitting room for the browser. Pick a piece from the collection and it is drawn onto you in a camera mirror, following your shoulders, arms, hips and head as you move.
 
-It is a static site: plain HTML, CSS and JavaScript modules, with no build step.
+It is a static site: plain HTML, CSS and JavaScript, with no build step and no server needed.
 
 ## Run it
 
-Camera access needs `https://` or `localhost`, so serve the folder rather than opening the file directly:
+Open `index.html` in Chrome or Edge. The page and the camera both work straight from the file, with no server.
 
-```bash
-python3 -m http.server 8000
-```
-
-Then open <http://localhost:8000>. To publish, host the folder on any static host with HTTPS (GitHub Pages, Netlify, Cloudflare Pages).
+To publish, host the folder on any static host with HTTPS (GitHub Pages, Netlify, Cloudflare Pages). Browsers only allow camera access on `https://`, `localhost`, or a local file.
 
 ## How it works
 
@@ -23,6 +19,8 @@ Then open <http://localhost:8000>. To publish, host the folder on any static hos
 | `js/garments.js` | Draws every piece on a canvas from a set of body points |
 | `js/mirror.js` | Camera, body tracking, and the live overlay |
 | `js/app.js` | Search, filters, layer toggles and the rest of the UI |
+
+The four scripts are plain (non-module) files loaded in that order and share one `window.Level` namespace, which is what lets the page run from a local file.
 
 Each piece is drawn procedurally from a pose (shoulders, elbows, wrists, hips, eyes, ears). The mirror passes in tracked landmarks; the catalogue thumbnails and the idle mannequin pass in fixed poses. That means a new product needs only a catalogue entry, not artwork.
 
