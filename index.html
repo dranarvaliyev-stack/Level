@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Level · Live fitting room</title>
+  <meta name="description" content="Try pieces on in a live mirror. Level fits shirts, knits, jackets, eyewear and hats to you as you move, entirely on your device.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#studio">Skip to the fitting room</a>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="#top" aria-label="Level home">
+        <svg class="brand-mark" viewBox="0 0 40 24" aria-hidden="true">
+          <rect x="1.5" y="4.5" width="37" height="15" rx="7.5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M14 5v14M26 5v14" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="20" cy="12" r="3.6" fill="var(--accent)"/>
+        </svg>
+        <span>Level</span>
+      </a>
+      <nav class="nav" aria-label="Sections">
+        <a href="#studio">Fitting room</a>
+        <a href="#collection">Collection</a>
+        <a href="#guide">How it works</a>
+      </nav>
+      <p class="header-note">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2M3.5 7h9v6.5h-9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Runs on your device
+      </p>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div>
+        <p class="eyebrow"><span class="rule"></span>Level / Live fitting room</p>
+        <h1>See it on. <em>Then decide.</em></h1>
+      </div>
+      <aside class="hero-note">
+        <p class="eyebrow">01 / The mirror</p>
+        <p>Pick a piece and watch it follow your shoulders, arms and turn, in your own room and your own light.</p>
+      </aside>
+    </section>
+
+    <section class="studio wrap" id="studio" aria-labelledby="studio-title">
+      <h2 class="visually-hidden" id="studio-title">Fitting room</h2>
+
+      <div class="mirror">
+        <div class="mirror-head">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="5" width="11" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M13 9l5-3v8l-5-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span>Live mirror</span>
+        </div>
+
+        <div class="mirror-tip">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="11" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M12 44V27c0-5 4-8 12-8s12 3 12 8v17" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M6 14V8h6M42 14V8h-6M6 34v6h6M42 34v6h-6" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <p><strong>Frame shoulders to hips.</strong> Stand back from the camera in even light with your arms in view. A close-fitting layer underneath gives the cleanest edges.</p>
+        </div>
+
+        <div class="stage" id="stage" data-mode="idle">
+          <canvas id="mirror-canvas" aria-label="Fitting room mirror" role="img"></canvas>
+          <div class="stage-idle" id="stage-idle">
+            <p class="eyebrow">Selected to try on</p>
+            <p class="stage-name" id="stage-name"></p>
+            <button class="btn btn-primary" id="camera-on" type="button">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="5" width="11" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 9l5-3v8l-5-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              Turn on camera
+            </button>
+          </div>
+          <div class="stage-live" id="stage-live" hidden>
+            <button class="btn btn-light" id="capture" type="button">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="10" r="3.2" fill="currentColor"/></svg>
+              Capture still
+            </button>
+            <button class="btn btn-ghost-dark" id="camera-off" type="button">Turn off camera</button>
+          </div>
+        </div>
+
+        <p class="mirror-status" id="mirror-status" role="status" data-tone="idle">Your camera is off.</p>
+
+        <fieldset class="layers">
+          <legend>In your mirror</legend>
+          <div class="layer-list" id="layer-list"></div>
+        </fieldset>
+
+        <details class="fit">
+          <summary>Adjust fit</summary>
+          <div class="fit-grid">
+            <label>Width
+              <input type="range" id="fit-width" min="0.8" max="1.3" step="0.01" value="1">
+            </label>
+            <label>Length
+              <input type="range" id="fit-length" min="0.8" max="1.3" step="0.01" value="1">
+            </label>
+            <label>Height
+              <input type="range" id="fit-lift" min="-0.3" max="0.3" step="0.01" value="0">
+            </label>
+            <button class="btn btn-ghost-dark" id="fit-reset" type="button">Reset</button>
+          </div>
+        </details>
+      </div>
+
+      <aside class="piece" aria-live="polite">
+        <h2 class="piece-title">The piece</h2>
+        <div class="piece-figure"><canvas id="piece-canvas" aria-hidden="true"></canvas></div>
+        <div class="piece-tag">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <p class="eyebrow" id="piece-slot">In the mirror</p>
+            <p class="piece-name" id="piece-name"></p>
+          </div>
+        </div>
+        <p class="piece-blurb" id="piece-blurb"></p>
+        <dl class="piece-facts">
+          <div><dt>Material</dt><dd id="piece-material"></dd></div>
+          <div><dt>Line</dt><dd id="piece-line"></dd></div>
+          <div><dt>Price</dt><dd id="piece-price"></dd></div>
+        </dl>
+        <details class="piece-more">
+          <summary>Framing and layers</summary>
+          <p>Tops follow your shoulders, elbows, wrists and hips. Eyewear and hats follow your eyes and ears, so they work from the chest up. You can wear one top, one pair of glasses and one hat together.</p>
+        </details>
+        <a class="btn btn-soft" href="#collection">Browse the collection <span aria-hidden="true">→</span></a>
+        <p class="privacy">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2M3.5 7h9v6.5h-9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          <span><strong>Your camera stays yours.</strong> Video, tracking and captures are processed on your device and are never uploaded.</span>
+        </p>
+      </aside>
+    </section>
+
+    <section class="collection wrap" id="collection" aria-labelledby="collection-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">02 / The collection</p>
+          <h2 id="collection-title">Everything here <em>can be tried on.</em></h2>
+        </div>
+        <p class="section-lede">Tops, knits, jackets, eyewear and hats. Choose a piece and it goes straight into your mirror, layered with whatever you are already wearing there.</p>
+      </div>
+
+      <div class="toolbar">
+        <label class="search">
+          <span class="visually-hidden">Search the collection</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <input type="search" id="search" placeholder="Search the collection" autocomplete="off">
+        </label>
+        <label class="sort">Order
+          <select id="sort">
+            <option value="featured">Featured</option>
+            <option value="name">Name A–Z</option>
+            <option value="price-asc">Price, low to high</option>
+            <option value="price-desc">Price, high to low</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+
+      <p class="result-count" id="result-count" role="status"></p>
+
+      <div class="now-bar">
+        <p><span class="eyebrow">Now in mirror</span> <span id="now-list"></span></p>
+        <a href="#studio">Return to mirror <span aria-hidden="true">↑</span></a>
+      </div>
+
+      <ul class="grid" id="grid"></ul>
+      <p class="empty" id="empty" hidden>Nothing matches that search. <button class="link" id="clear-search" type="button">Clear filters</button></p>
+      <div class="more"><button class="btn btn-soft" id="show-more" type="button" hidden></button></div>
+      <p class="fineprint">Sample catalogue. Pieces and prices are placeholders, and the mirror shows an illustration of each cut, not a measured fit.</p>
+    </section>
+
+    <section class="guide wrap" id="guide" aria-labelledby="guide-title">
+      <div class="guide-head">
+        <p class="eyebrow">A quick guide</p>
+        <h2 id="guide-title">Three steps <em>to a good fit.</em></h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <svg viewBox="0 0 64 48" aria-hidden="true"><circle cx="46" cy="14" r="6" fill="var(--accent)"/><path d="M46 2v4M46 22v4M34 14h4M54 14h4M37.5 5.5l2.8 2.8M51.7 19.7l2.8 2.8M54.5 5.5l-2.8 2.8M40.3 19.7l-2.8 2.8" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/><circle cx="22" cy="18" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 46V36c0-6 6-9 14-9s14 3 14 9v10" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          <p class="eyebrow">01</p>
+          <h3>Find your light.</h3>
+          <p>Face a window or a lamp so the camera can see you clearly, without a bright light behind you.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 64 48" aria-hidden="true"><path d="M10 14V6h8M54 14V6h-8M10 34v8h8M54 34v8h-8" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="15" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 44V32c0-5 5-8 12-8s12 3 12 8v12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          <p class="eyebrow">02</p>
+          <h3>Make room to move.</h3>
+          <p>Step back until your shoulders and hips are in frame, then turn, reach and walk as you normally would.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 64 48" aria-hidden="true"><rect x="12" y="8" width="34" height="34" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="29" cy="21" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M19 42c0-7 4-10 10-10s10 3 10 10" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="48" cy="36" r="8" fill="var(--accent)"/><path d="M44.5 36l2.6 2.6 4.6-5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <p class="eyebrow">03</p>
+          <h3>Keep the look.</h3>
+          <p>Capture a still and it saves straight to your device, ready to compare or send to a friend.</p>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <p>Level · Live fitting room</p>
+      <p>Body tracking by MediaPipe Pose Landmarker, downloaded once and run in your browser.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
